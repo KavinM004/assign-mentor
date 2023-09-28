@@ -3,13 +3,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Mentor = require("./models/Mentor");
 const Student = require("./models/Student");
-
+require('dotenv').config()
 const app = express();
 
 app.use(bodyParser.json());
 
-const PORT = 3000;
-const DB_URL = 'mongodb+srv://KavinM:Kavi2002@cluster0.jqplwlv.mongodb.net/?retryWrites=true&w=majority';
+const PORT = process.env.PORT;
+const DB_URL = process.env.DB_URL;
 mongoose
   .connect(DB_URL, {})
   .then(() => console.log("Connected to MongoDB"))
@@ -60,6 +60,7 @@ app.put("/student/:studentId/assignMentor/:mentorId", async (req, res) => {
   try {
     const mentor = await Mentor.findById(req.params.mentorId);
     const student = await Student.findById(req.params.studentId);
+    console.log(student);
     if (student.cMentor) {
       student.pMentor.push(student.cMentor);
     }
@@ -83,7 +84,7 @@ app.get("/mentor/:mentorId/students", async (req, res) => {
   }
 });
 
-app.get('/student/studentId',async(req,res)=>{
+app.get('/student/:studentId',async(req,res)=>{
     try {
         const pmentor=await Student.findById(req.params.studentId);
         res.status(201).send(pmentor);
@@ -91,7 +92,6 @@ app.get('/student/studentId',async(req,res)=>{
         res.status(501).send(error);
     }
 });
-
 
 app.listen(PORT, () => {
   console.log("Server is running on PORT", PORT);
