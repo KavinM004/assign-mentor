@@ -8,7 +8,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const DB_URL = process.env.DB_URL;
 
 //Connecting to the MongoDB
